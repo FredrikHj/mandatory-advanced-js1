@@ -68,7 +68,7 @@
   left: 63px;
   display: block;
   width: 75%;
-  height: 390px;
+  height: 410px;
   border-radius: 30px;
   background-color: white;
   color: black;
@@ -77,6 +77,11 @@
   width: 100%;
   text-align: center;
   font-size: 18px;
+}
+#closeBtn{
+  position: relative;
+  left: 281px;
+  top: -39px;
 }
 #usrStrView2{
   position: absolute;
@@ -91,9 +96,8 @@
 fieldset{
   border: none;
 }
-#messagnesReceive{
+.messagnesReceive{
   height: 198px;
-  overflow-y: scroll;
   overflow-x: hidden;
 }
 .messContainer{
@@ -115,9 +119,10 @@ fieldset{
   height: 25px;
 }
 .messContent{
-  width: 100px;
+  width: 100%;
+  word-break: break-all;
 }
-#messMiddleLine{
+#middleLine{
   width: 100%;
   height: 3px;
   background-color: grey;
@@ -128,15 +133,21 @@ fieldset{
 #messagneSend{
   position: absolute;
   left: 24px;
-  bottom: 30px;
+  bottom: -30px;
 }
 #chatMessegnes{
   width: 290px;
   height: 50px;
   resize: none;
 }
-#closeBtn{
-  position: absolute;
-  left: 45%;
-  bottom: 0;
+#finishMess{
+  position: relative;
+  top: -15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+#sendBtn{
+  height: 20px;
 }
