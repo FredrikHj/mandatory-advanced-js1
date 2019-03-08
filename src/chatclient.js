@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './chatclient.css';
 import io from 'socket.io-client';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import Linkify from 'react-linkify';
+import Emojify from "react-emojione";
 
 //let loopCounter = 0;
 
@@ -22,11 +24,10 @@ class ChatWindow extends Component {
   constructor(props) {
     super(props);
     this.state = { messages: [], textInput: ''};
-
     this.messegnesAdd = this.messegnesAdd.bind(this);
-    this.checkStrInput = this.checkStrInput.bind(this);
     this.setYourMess = this.setYourMess.bind(this);
     this.messagnesSend = this.messagnesSend.bind(this);
+    this.letterCounter = this.letterCounter.bind(this);
     this.logOut = this.logOut.bind(this);
   }
   componentDidMount() {
@@ -43,7 +44,6 @@ class ChatWindow extends Component {
     }.bind(this));
     this.listen.on('connect', function(){});
   }
-
   componentWillUnmount() {
     listen.on('disconnect', function(){});
   }
@@ -61,23 +61,27 @@ class ChatWindow extends Component {
     let messBody = {
         username: getUserName,
         content: getMessStr
-      }
+    }
 
     this.listen.emit('message', messBody);
     this.setState({ textInput: '' });
     document.querySelector('#chatMessegnes').value = '';
-   }
-
-
-  checkStrInput(e) {
-    let incommingInput = e.target.value;
-    let incommingInputSplitToTypeLetter = incommingInput.split('').pop();
-    console.log(incommingInputSplitToTypeLetter);
-    if (incommingInputSplitToTypeLetter === 'ö') {
-      console.log('Fel tecken');
-    }
   }
+  letterCounter() {
+    let startValue = 0;
+    let getMessLength = this.state.textInput.length;
+    let getTotLeft = startValue+getMessLength;
+    let getCounter = document.querySelector('#totCounter');
 
+    if (getTotLeft > 200) {
+      getCounter.setAttribute('style', 'color: red');
+    }
+    else if (getTotLeft < 201) {
+      getCounter.setAttribute('style', 'color: black');
+    }
+
+    return getTotLeft;
+  }
   logOut() {
 
   }
@@ -99,7 +103,7 @@ class ChatWindow extends Component {
                         <p>{ obj.username }</p> <p>{ new Date(obj.timestamp ).toLocaleString('sv-SE') }</p>
                       </header>
                       <div className="messContent" >
-                      { obj.content }
+                        <Linkify>{ obj.content }</Linkify>
                       </div>
                       <hr className="middleLine"/>
                     </section>
@@ -111,8 +115,11 @@ class ChatWindow extends Component {
         </fieldset>
         <fieldset id="messagneSend">
           <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
-            <textarea id="chatMessegnes" maxLength="200" onChange={ this.setYourMess } required></textarea>
-            <div id="finishMess"> <p> / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
+          <Emojify style={{height: 32, width: 32}}>
+            :) ;) ^^U :D :heart:
+          </Emojify>
+            <textarea id="chatMessegnes" maxLength="201" onChange={ this.setYourMess } required></textarea>
+            <div id="finishMess"> <p id="totCounter"> Tecken använda: { this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
         </fieldset>
       </section>
     );
