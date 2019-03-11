@@ -4,13 +4,8 @@ import io from 'socket.io-client';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Linkify from 'react-linkify';
 import Emojify from "react-emojione";
+import {emojify} from 'react-emojione';
 
-//let loopCounter = 0;
-
-// Random function for the App ==================================================================================================================
-function showTipsPopUp () {
-
-}
 // The headerContent ============================================================================================================================
 class HeaderContent extends Component {
   render() {
@@ -23,12 +18,11 @@ class HeaderContent extends Component {
 class ChatWindow extends Component {
   constructor(props) {
     super(props);
-    this.state = { messages: [], textInput: ''};
+    this.state = { messages: [], textInput: '', color: 'black'};
     this.messegnesAdd = this.messegnesAdd.bind(this);
     this.setYourMess = this.setYourMess.bind(this);
     this.messagnesSend = this.messagnesSend.bind(this);
     this.letterCounter = this.letterCounter.bind(this);
-    this.logOut = this.logOut.bind(this);
   }
   componentDidMount() {
     this.listen = io('http://ec2-13-53-66-202.eu-north-1.compute.amazonaws.com:3000/');
@@ -55,7 +49,7 @@ class ChatWindow extends Component {
   }
   messagnesSend() {
     // Get both string needed for sending the mess and last reset both state and the textarea for the mess
-    let getUserName = document.querySelector('#yourUsrName').textContent;
+    let getUserName = document.querySelector('#yourUsrNameView2').textContent;
     let getMessStr = this.state.textInput;
 
     let messBody = {
@@ -72,38 +66,41 @@ class ChatWindow extends Component {
     let getMessLength = this.state.textInput.length;
     let getTotLeft = startValue+getMessLength;
     let getCounter = document.querySelector('#totCounter');
-
-    if (getTotLeft > 200) {
-      getCounter.setAttribute('style', 'color: red');
-    }
-    else if (getTotLeft < 201) {
-      getCounter.setAttribute('style', 'color: black');
-    }
-
     return getTotLeft;
   }
-  logOut() {
-
-  }
-
   render() {
+    let options = {
+      convertShortnames: true,
+      convertUnicode: true,
+      convertAscii: true,
+      style: {
+        backgroundImage: 'url("/path/to/your/emojione.sprites.png")',
+        height: 32,
+        margin: 4,
+      },
+      // this click handler will be set on every emoji
+      onClick: event => alert(event.target.title)
+    };
     return (
       <section>
-        <p id="chatWindow">Chatmeddelanden</p> <button id="closeBtn" onClick={ this.logOut } >Logga Ut</button>
-        <p id="usrStrView2">Ditt användarnamn: <span id="yourUsrName">{ this.props.sendUsrName }</span></p>
+        <p id="chatWindow">Chatmeddelanden</p>
+        <p id="yourUsrNameView2">{ this.props.sendUsrName }</p>
         <fieldset>
           <legend>Meddelanden</legend>
             <ScrollToBottom className="messagnesReceive">
               {
                 this.state.messages.map(obj => {
-                  //console.log(this.state.messages);
                   return (
                     <section className="messContainer" key={obj.id}>
                       <header className="messHeader">
                         <p>{ obj.username }</p> <p>{ new Date(obj.timestamp ).toLocaleString('sv-SE') }</p>
                       </header>
                       <div className="messContent" >
-                        <Linkify>{ obj.content }</Linkify>
+                        <Linkify>
+                        <Emojify style={{height: 30, width: 30}}>
+                          { obj.content }
+                        </Emojify>
+                      </Linkify>
                       </div>
                       <hr className="middleLine"/>
                     </section>
@@ -115,11 +112,8 @@ class ChatWindow extends Component {
         </fieldset>
         <fieldset id="messagneSend">
           <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
-          <Emojify style={{height: 32, width: 32}}>
-            :) ;) ^^U :D :heart:
-          </Emojify>
             <textarea id="chatMessegnes" maxLength="201" onChange={ this.setYourMess } required></textarea>
-            <div id="finishMess"> <p id="totCounter"> Tecken använda: { this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
+            <div id="finishMess">  Använda tecken: <p id="totCounter" style={{ color: this.state.textInput.length > 200 ? 'red' : null }}>{ this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
         </fieldset>
       </section>
     );
@@ -131,53 +125,35 @@ class MainContent extends Component {
   constructor(props) {
     super(props);
     // Is sending into the ChatWindow
-    this.state = { loginUsrName: '' };
+    this.state = { loginUsrName: '', correctUsername: true, signedIn: false };
     // ==============================
 
     this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
     this.setYourUserName = this.setYourUserName.bind(this);
   }
   setYourUserName(e) {
     let incommingInput = e.target.value;
-    this.setState({ loginUsrName: incommingInput });
 
-    // if (incommingInput./[a-z0-9]/) {
-    //   console.log('few');
-    // }
-    // let getAlphanumeric = /incommingInput/.test(/[a-z0-9]i/);
-    // console.log(getAlphanumeric);
+    console.log(incommingInput);
+    console.log(this.state.correctUsername);
+    let getAlphanumeric = /^[\w-]+$/;
 
-
-    // Validate the inputed usernamne in real time
-
-
-    //
-    //
-    // let incommingInputSplitToTypeLetter = incommingInput.split('').pop();
-    // console.log(getAlphanumeric);
-    //
-    // if (getAlphanumeric) {
-    // }
-    // // Check for just alphanumeric characters, -, _ and spaces
-    // else if (incommingInput === '-'  || incommingInput === '_') {
-    // }
-    // // Send a error if fault
-    //
-
-    // let incommingInputSplitToTypeLetter = incommingInput.split('').pop();
-    // console.log(incommingInputSplitToTypeLetter);
-    // if (incommingInputSplitToTypeLetter === 'ö') {
-    //   console.log('Fel tecken');
-    // }
-    // let strArray = [];
-    // strArray.push();
-    // console.log(strArray.split(''));
-    // let getLastArrStr = strArray.pop();
-    // console.log(getLastArrStr);
-    // this.setState({textInput: e.target.value})
+    // Check if the strings is meetting the condition
+    if (getAlphanumeric.test(incommingInput)) {
+      this.setState({ loginUsrName: incommingInput, correctUsername: true });
+    }
+    else {
+      this.setState({correctUsername: false });
+    }
   }
   logIn() {
-
+    if (this.state.correctUsername === true) {
+      this.setState({ signedIn: true});
+    }
+  }
+  logOut() {
+    this.setState({ signedIn: false});
   }
   render() {
     return (
@@ -190,11 +166,12 @@ class MainContent extends Component {
               <input type="text" id="usernameStr" minLength="1" maxLength="12" onChange={ this.setYourUserName } defaultValue={ this.state.loginUsrName } required/>
               <button id="usernameBtn" onClick={ this.logIn } >Logga In!</button>
             </div>
-            <p id="showTipsPopUp">Vanliga tecken & siffor (- _  mellanslag. Max 12 tecken!)</p>
+            <p id="incorrectUsername" style={ (this.state.correctUsername === false) ? {display: 'block'} : null}>Alphanumeric bara  inkl: - _ spaces!</p>
         </section>
-        <section id="view2">
+        <section id="view2" style={ (this.state.signedIn === true) ? {display: 'block'} : {display: 'none'} }>
           <ChatWindow sendUsrName={ this.state.loginUsrName }/>
         </section>
+        <button id="closeBtn" style={ (this.state.signedIn === true) ? {display: 'block'} : null} onClick={ this.logOut }>Logga Ut</button>
       </div>
     );
   }

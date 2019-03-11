@@ -22,16 +22,15 @@
   font-weight: bold;
   color: red
 }
-#showTipsPopUp{
+#incorrectUsername{
   position: absolute;
-  top: 100px;
-  left: 100px;
-  display: block;
-  color: black;
-  /* border-radius: 30px; */
+  top: 260px;
+  left: 134px;
+  display: none;
+  color: white;
   width: 250px;
   height: 60px;
-  background-color: white;
+  background-color: black;
 }
 /* ============== View 1 ============== */
 #view1{
@@ -57,18 +56,24 @@
 #usrStrView1{
   font-size: 18px;
 }
-#usernameBtn{
-
+#closeBtn{
+  position: relative;
+  left: 424px;
+  top: -67px;
+  background: none;
+  color: white;
+  font-weight: bold;
+  border: none;
+  display: none;
 }
-
 /* ============== View 2 ============== */
 #view2{
   position: relative;
-  top: 200px;/*-15px;*/
-  left: 63px;
-  display: block;
+  top: -40px;
+  left: 44px;
+  display: none;
   width: 75%;
-  height: 445px;
+  height: 415px;
   border-radius: 30px;
   background-color: white;
   color: black;
@@ -78,18 +83,10 @@
   text-align: center;
   font-size: 18px;
 }
-#closeBtn{
-  position: relative;
-  left: 281px;
-  top: -39px;
-}
-#usrStrView2{
+#yourUsrNameView2{
   position: absolute;
   top: 14px;
   right: 15px;
-  font-size: 16px;
-}
-#yourUsrName{
   font-size: 14px;
   font-weight: bold;
 }
@@ -119,6 +116,7 @@ fieldset{
   height: 25px;
 }
 .messContent{
+  margin-top: 6px;
   width: 100%;
   word-break: break-all;
 }
