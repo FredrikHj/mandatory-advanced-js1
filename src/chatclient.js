@@ -99,6 +99,7 @@ class ChatWindow extends Component {
                         <Linkify>
                         <Emojify style={{height: 30, width: 30}}>
                           { obj.content }
+
                         </Emojify>
                       </Linkify>
                       </div>
@@ -107,13 +108,19 @@ class ChatWindow extends Component {
                   );
                 })
               }
+              <p id="yourMess">Ditt svar:</p>
+              <Linkify>
+                <Emojify style={{height: 30, width: 30}}>
+                  <p id="yourInputedMess">{this.state.textInput}</p>
+                </Emojify>
+              </Linkify>
             </ScrollToBottom>
             <hr className="middleLine"/>
         </fieldset>
         <fieldset id="messagneSend">
           <legend>Ditt meddelande <span className="inputReq"> *</span> </legend>
             <textarea id="chatMessegnes" maxLength="201" onChange={ this.setYourMess } required></textarea>
-            <div id="finishMess">  Använda tecken: <p id="totCounter" style={{ color: this.state.textInput.length > 200 ? 'red' : null }}>{ this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
+            <div id="finishMess">  Använda tecken: <p id="totCounter" style={(this.state.textInput.length > 200) ? {color: 'red', fontWeight: 'bold'} : null }>{ this.letterCounter() } / 200 </p> <button id="sendBtn" onClick={ this.messagnesSend }> Sänd</button></div>
         </fieldset>
       </section>
     );
@@ -166,7 +173,7 @@ class MainContent extends Component {
               <input type="text" id="usernameStr" minLength="1" maxLength="12" onChange={ this.setYourUserName } defaultValue={ this.state.loginUsrName } required/>
               <button id="usernameBtn" onClick={ this.logIn } >Logga In!</button>
             </div>
-            <p id="incorrectUsername" style={ (this.state.correctUsername === false) ? {display: 'block'} : null}>Alphanumeric bara  inkl: - _ spaces!</p>
+            <p id="incorrectUsername" style={ (this.state.correctUsername === false) ? {display: 'block',  color: 'red', fontWeight: 'bold'} : null}>Alphanumeric bara  inkl: - _ spaces!</p>
         </section>
         <section id="view2" style={ (this.state.signedIn === true) ? {display: 'block'} : {display: 'none'} }>
           <ChatWindow sendUsrName={ this.state.loginUsrName }/>
