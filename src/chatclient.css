@@ -128,14 +128,6 @@ fieldset{
 .timeIdContainer{
   width: 300px;
 }
-#yourMess{
-  text-align: center;
-  font-weight: bold;
-  color: red;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
 #yourInputedMess{
   word-break: break-all;
   width: 100%;

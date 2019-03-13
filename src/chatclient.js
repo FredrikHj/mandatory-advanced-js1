@@ -46,20 +46,26 @@ class ChatWindow extends Component {
   }
   setYourMess(e) {
     this.setState({ textInput: e.target.value });
+
   }
   messagnesSend() {
     // Get both string needed for sending the mess and last reset both state and the textarea for the mess
     let getUserName = document.querySelector('#yourUsrNameView2').textContent;
     let getMessStr = this.state.textInput;
+    console.log(getMessStr);
 
     let messBody = {
         username: getUserName,
         content: getMessStr
     }
 
-    this.listen.emit('message', messBody);
+    this.listen.emit('message', messBody, (response) => {
+      this.messegnesAdd(response.data.newMessage);
+    });
     this.setState({ textInput: '' });
     document.querySelector('#chatMessegnes').value = '';
+    //this.componentDidMount();
+    console.log(this.state.messages);
   }
   letterCounter() {
     let startValue = 0;
@@ -108,12 +114,6 @@ class ChatWindow extends Component {
                   );
                 })
               }
-              <p id="yourMess">Ditt svar:</p>
-              <Linkify>
-                <Emojify style={{height: 30, width: 30}}>
-                  <p id="yourInputedMess">{this.state.textInput}</p>
-                </Emojify>
-              </Linkify>
             </ScrollToBottom>
             <hr className="middleLine"/>
         </fieldset>
@@ -141,9 +141,6 @@ class MainContent extends Component {
   }
   setYourUserName(e) {
     let incommingInput = e.target.value;
-
-    console.log(incommingInput);
-    console.log(this.state.correctUsername);
     let getAlphanumeric = /^[\w-]+$/;
 
     // Check if the strings is meetting the condition
